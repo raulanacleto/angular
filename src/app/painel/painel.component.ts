@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Frase } from '../shared/frase.model'
 import { FRASES } from './frases-mock';
+import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-painel',
@@ -11,9 +12,16 @@ export class PainelComponent implements OnInit {
 
   public frases: Frase[] = FRASES
   public instrucao: string = 'Traduza a frase:'
-  public resposta: string
+  public resposta: string = ''
+  public progresso: number = 0
 
-  constructor() { }
+  public rodada: number = 0
+  public rodadaFrase: Frase
+
+  constructor() { 
+    this.atualizaRodada()
+    console.log(this.rodadaFrase)
+  }
 
   ngOnInit() {
   }
@@ -24,6 +32,37 @@ export class PainelComponent implements OnInit {
 
   public atualizaResposta(resposta: Event){
     this.resposta = (<HTMLInputElement>resposta.target).value
-    console.log(this.resposta)
+    // console.log(this.resposta)
   }
+
+  public verificarResposta(){
+    console.log("Verificar a resposta:" + this.resposta)
+
+    if(this.rodadaFrase.frasePtBr == this.resposta){
+      alert('tradução correta')  
+      //trocar a pergunta 
+      this.rodada++
+
+      //progresso
+      this.progresso = this.progresso + (100 / this.frases.length)
+      console.log("progresso:" + this.progresso)
+
+      //atribui a frase corrente para exibir na view
+      this.atualizaRodada()
+      
+    }else{
+      alert('tradução errada')
+    }
+
+  }
+
+
+  private atualizaRodada(): void {
+    //define a frase da rodada com base em alguma logica
+    this.rodadaFrase = this.frases[this.rodada]
+
+    //limpar a resposta 
+    this.resposta = ''
+  }
+
 }
