@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Coracao } from '../shared/coracao.model';
 
 
@@ -7,20 +7,33 @@ import { Coracao } from '../shared/coracao.model';
   templateUrl: './tentativas.component.html',
   styleUrls: ['./tentativas.component.css']
 })
-export class TentativasComponent implements OnInit {
+export class TentativasComponent implements OnInit, OnChanges {
+  
+  @Input() public tentativas: number
 
-  public coracaoVazio: string = '/assets/coracao_vazio.png'
-  public coracaoCheio: string = '/assets/coracao_cheio.png'
-
-  public coracoes: Coracao[]
-
-  constructor() { 
+  public coracoes: Coracao[] = [
     new Coracao(true),
     new Coracao(true),
     new Coracao(true)
+  ]
+
+  constructor() { 
+    console.log(this.coracoes)
+  }
+
+  ngOnChanges() {
+    //sempre que houver uma mudanca na variavel quantidade vai entrar aqui
+    if(this.tentativas !== this.coracoes.length){
+      let indice = this.coracoes.length - this.tentativas
+      this.coracoes[indice -1].cheio = false
+    }
+    
+    console.log('tentativas recebidas do painel no onChange: ', this.tentativas)
   }
 
   ngOnInit() {
+    console.log('tentativas recebidas do painel no onInit: ', this.tentativas)
   }
 
+  
 }

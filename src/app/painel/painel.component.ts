@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Frase } from '../shared/frase.model'
 import { FRASES } from './frases-mock';
-import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-painel',
@@ -17,6 +16,7 @@ export class PainelComponent implements OnInit {
 
   public rodada: number = 0
   public rodadaFrase: Frase
+  public tentativas: number = 3
 
   constructor() { 
     this.atualizaRodada()
@@ -52,8 +52,16 @@ export class PainelComponent implements OnInit {
       
     }else{
       alert('tradução errada')
-    }
+      //diminuir as tentativas
+      this.tentativas--
+      
+      //na quarta tentativa perde o jogo
+      if(this.tentativas === -1){
+        alert('voce perdeu todas as tentativas')
+      }
 
+    }
+    console.log('tentativa:' + this.tentativas)
   }
 
 
