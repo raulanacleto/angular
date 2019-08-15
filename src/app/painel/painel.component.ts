@@ -8,20 +8,22 @@ import { FRASES } from './frases-mock';
   styleUrls: ['./painel.component.css']
 })
 export class PainelComponent implements OnInit, OnDestroy {
-  
+
   public frases: Frase[] = FRASES
-  public instrucao: string = 'Traduza a frase:'
+  // public instrucao: string = 'Traduza a frase:'
   public resposta: string = ''
-  public progresso: number = 0
 
   public rodada: number = 0
   public rodadaFrase: Frase
+
+  public progresso: number = 0
   public tentativas: number = 3
+
 
   //subindo essa parte que esta em painel para app, para conseguir destruir o painel
   @Output() public encerrarJogo: EventEmitter<string> = new EventEmitter()
 
-  constructor() { 
+  constructor() {
     this.atualizaRodada()
     console.log(this.rodadaFrase)
   }
@@ -33,48 +35,42 @@ export class PainelComponent implements OnInit, OnDestroy {
     console.log('o componente painel foi destruido')
   }
 
-  public testandoMetodo(){
+  public testandoMetodo() {
     console.log('teste')
   }
 
-  public atualizaResposta(resposta: Event){
+  public atualizaResposta(resposta: Event) {
     this.resposta = (<HTMLInputElement>resposta.target).value
     // console.log(this.resposta)
   }
 
-  public verificarResposta(){
-    console.log("Verificar a resposta:" + this.resposta)
-
-    if(this.rodadaFrase.frasePtBr == this.resposta){
-      alert('tradução correta')  
+  public verificarResposta() {
+    //console.log("Verificar a resposta:" , this.resposta)
+    
+    if (this.rodadaFrase.frasePtBr == this.resposta) {
       //trocar a pergunta 
       this.rodada++
 
       //progresso
       this.progresso = this.progresso + (100 / this.frases.length)
-      console.log("progresso:" + this.progresso)
+      
 
-      if(this.tentativas === 4){
+      if (this.tentativas === 4) {
         this.encerrarJogo.emit('vitoria')
-        alert('voce venceu')
       }
 
       //atribui a frase corrente para exibir na view
       this.atualizaRodada()
-      
-    }else{
-      alert('tradução errada')
+
+    } else {
       //diminuir as tentativas
       this.tentativas--
-      
-      //na quarta tentativa perde o jogo
-      if(this.tentativas === -1){
-        this.encerrarJogo.emit('derrota')
-        alert('voce perdeu todas as tentativas')
-      }
 
+      //na quarta tentativa perde o jogo
+      if (this.tentativas === -1) {
+        this.encerrarJogo.emit('derrota')
+      }
     }
-    console.log('tentativa:' + this.tentativas)
   }
 
 
